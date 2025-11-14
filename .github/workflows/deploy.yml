@@ -4,8 +4,8 @@ name: Deploy React App to GitHub Pages
 on:
   # Se ejecuta cuando haces push a la rama "ECRV2"
   push:
-    branches: [ "ECRV2" ] # ¡Asegúrate que esta sea tu rama principal!
-    
+    branches: ["ECRV2"] # ¡Asegúrate que esta sea tu rama principal!
+
   # Te permite ejecutar este workflow manualmente desde la pestaña de Actions
   workflow_dispatch:
 
@@ -27,27 +27,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20 # Puedes usar 18 o 20
-          cache: 'npm'
-          
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci # 'ci' es más rápido y seguro para CI/CD que 'install'
-        
+
       - name: Build
-        run: npm run build # Este comando compila tu app de Vite
-        
+        run: npm run build # Este comando compila tu app
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Sube el directorio "dist", que es donde Vite pone los archivos compilados
-          path: './dist' 
+          # Sube el directorio "build", que es donde tu app se compiló
+          path: "./build"
 
   # Job de "deploy" (despliegue)
   deploy:
