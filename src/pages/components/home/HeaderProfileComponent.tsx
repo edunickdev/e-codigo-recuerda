@@ -89,7 +89,7 @@ const HeaderProfileComponent = ({
               className="font-bold text-sm md:text-lg text-midblue"
               speed={90}
               cursor={false}
-              sequence={["INGENIERO DESARROLLADOR DE SOFTWARE FULLSTACK"]}
+              sequence={["Software Engineer | Mobile (Flutter) & Cloud Specialist (GCP/Azure) | Python Backend"]}
             />
             <TypeAnimation
               wrapper="h2"
@@ -98,13 +98,13 @@ const HeaderProfileComponent = ({
               cursor={false}
               sequence={["EDUARD NICOLÁS SARMIENTO HERRERA"]}
             />
-            <TypeAnimation 
+            {/* <TypeAnimation 
               wrapper="h3"
               speed={90}
               cursor={false}
               className="font-semibold text-sm md:text-lg text-midblue"
-              sequence={["Microsoft Azure Developer Associate"]}
-            />
+              sequence={["Microsoft Azure Architect Certified"]}
+            /> */}
             <section className="flex gap-x-4 pt-2">
               <a href="https://github.com/edunickdev" target="_blank" className="text-sm md:text-lg hover:text-midblue transition-all duration-250 text-center z-10">Ver Github</a>
               <a href="https://www.linkedin.com/in/eduard-nicolas-sarmiento-herrera" target="_blank" className="text-sm md:text-lg hover:text-midblue transition-all duration-250 text-center z-10">Ver LinkedIn</a>
@@ -118,7 +118,7 @@ const HeaderProfileComponent = ({
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.6 }}
             className="mt-8 font-semibold text-xl md:text-2xl">
-             Innovador y Apasionado por la Tecnología
+            Apasionado por la tecnología y la innovación
           </motion.h2>
           <motion.span
             initial={{ x: 50, opacity: 0 }}
@@ -126,10 +126,8 @@ const HeaderProfileComponent = ({
             transition={{ delay: 1.2 }}
             className="mt-5 md:pr-10 text-small md:text-lg"
           >
-            El código es mi herramienta y la innovación mi motor. 
-            Desde aplicaciones móviles hasta soluciones en la nube, 
-            disfruto cada oportunidad de transformar ideas en productos funcionales. 
-            Mi misión es clara: utilizar la tecnología para mejorar la vida de las personas.
+            Ingeniero de Software con más de 3 años de experiencia en el ciclo completo de desarrollo (SDLC). Especialista en la construcción de arquitecturas móviles escalables con Flutter y backends robustos en Python (FastAPI). Experto en implementación de flujos CI/CD y despliegues en nube (Azure/GCP).
+            Combino una sólida capacidad técnica en integración de IA Generativa (OpenAI/RAG) con una trayectoria previa en el sector financiero, aportando una visión estratégica sobre seguridad de datos y eficiencia operativa.
           </motion.span>
         </section>
       </div>
