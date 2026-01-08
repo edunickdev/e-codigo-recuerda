@@ -39,6 +39,7 @@ import java from "../assets/images/Java.svg";
 import icon2 from "../assets/images/icon2.svg";
 import aback from "../assets/icons/back.svg";
 import afront from "../assets/icons/next.svg";
+import az204 from "../assets/images/AZ204.svg";
 
 
 export const statics: { [key: string]: string } = {

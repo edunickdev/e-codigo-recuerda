@@ -96,7 +96,7 @@ const HeaderProfileComponent = ({
               className="font-bold text-sm md:text-lg text-midblue"
               speed={90}
               cursor={false}
-              sequence={["EDUARD NICOLÁS SARMIENTO HERRERA"]}
+              sequence={["Eduard Nicolás Sarmiento Herrera"]}
             />
             {/* <TypeAnimation 
               wrapper="h3"

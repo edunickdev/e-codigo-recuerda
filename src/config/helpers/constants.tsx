@@ -64,14 +64,23 @@ export const formalStudies: Array<Study> = [
     //     url: "https://learn.microsoft.com/api/credentials/share/es-es/89344633/79FC32567C84A85C?sharingId=FFEA776B4BCDB204"
     // },
     {
-        title: "Microsoft Azure Data Engineer",
+        title: "Microsoft Azure Developer",
         institution: "Microsoft",
         semester: "Certificado",
         description: "",
         type: "Microsoft",
-        image: statics.dp203,
-        url: "https://learn.microsoft.com/api/credentials/share/es-es/89344633/6EFCD6CE60406C11?sharingId=FFEA776B4BCDB204"
+        image: statics.az204,
+        url: "https://learn.microsoft.com/api/credentials/share/es-es/89344633/47A773528089A70?sharingId=FFEA776B4BCDB204"
     },
+    // {
+    //     title: "Microsoft Azure Data Engineer",
+    //     institution: "Microsoft",
+    //     semester: "Certificado",
+    //     description: "",
+    //     type: "Microsoft",
+    //     image: statics.dp203,
+    //     url: "https://learn.microsoft.com/api/credentials/share/es-es/89344633/6EFCD6CE60406C11?sharingId=FFEA776B4BCDB204"
+    // },
     {
         title: "Redes Informáticas de Internet",
         institution: "Platzi",
