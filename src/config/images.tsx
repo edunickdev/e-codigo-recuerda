@@ -7,7 +7,6 @@ import fastapiicon from "../assets/images/FastAPI.svg";
 import fotoPerfil from "../assets/images/fotoPerfil.jpg";
 import az104 from "../assets/images/AZ104.svg";
 import dp203 from "../assets/images/DP203.svg";
-import az204 from "../assets/images/az204.svg";
 import logopoli from "../assets/images/logopoli.svg";
 import uislogo from "../assets/images/uislogo.svg";
 import cloud from "../assets/icons/cloud.svg";
