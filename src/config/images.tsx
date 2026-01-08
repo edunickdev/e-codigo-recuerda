@@ -7,6 +7,7 @@ import fastapiicon from "../assets/images/FastAPI.svg";
 import fotoPerfil from "../assets/images/fotoPerfil.jpg";
 import az104 from "../assets/images/AZ104.svg";
 import dp203 from "../assets/images/DP203.svg";
+import az305 from "../assets/images/AZ305.svg";
 import logopoli from "../assets/images/logopoli.svg";
 import uislogo from "../assets/images/uislogo.svg";
 import cloud from "../assets/icons/cloud.svg";
@@ -51,6 +52,7 @@ export const statics: { [key: string]: string } = {
   fotoPerfil: fotoPerfil,
   az104: az104,
   dp203: dp203,
+  az305: az305,
   az204: az204,
   logopoli: logopoli,
   uislogo: uislogo,
