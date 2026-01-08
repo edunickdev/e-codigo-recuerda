@@ -24,7 +24,7 @@ export const formalStudies: Array<Study> = [
         title: "Ingeniería de desarrollo de Software",
         institution: "Politécnico Grancolombiano",
         semester: "6to Semestre",
-        description: "2025",
+        description: "2026",
         type: "Formal",
         image: statics.logopoli,
     },
