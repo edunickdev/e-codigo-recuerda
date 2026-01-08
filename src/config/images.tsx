@@ -39,6 +39,7 @@ import java from "../assets/images/Java.svg";
 import icon2 from "../assets/images/icon2.svg";
 import aback from "../assets/icons/back.svg";
 import afront from "../assets/icons/next.svg";
+import az204 from "../assets/images/AZ204.svg";
 
 
 export const statics: { [key: string]: string } = {
@@ -52,6 +53,7 @@ export const statics: { [key: string]: string } = {
   az104: az104,
   az305: az305,
   dp203: dp203,
+  az204: az204,
   logopoli: logopoli,
   uislogo: uislogo,
   cloud: cloud,
