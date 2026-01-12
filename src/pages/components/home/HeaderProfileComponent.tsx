@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { statics } from "../../../config/images";
-import { TypeAnimation } from 'react-type-animation';
+import { TypeAnimation } from "react-type-animation";
 import { useProjects } from "../../../stores/stores";
 
 const HeaderProfileComponent = ({
@@ -76,7 +76,7 @@ const HeaderProfileComponent = ({
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
             src={statics.fotoPerfil}
-            className="w-36 md:w-24 h-32 md:h-32 mt-4 rounded-lg ml-6"
+            className="w-24 md:w-32 h-28 md:h-40 mt-4 rounded-lg ml-6"
           />
           <motion.div
             initial={{ x: -50, opacity: 0 }}
@@ -89,7 +89,9 @@ const HeaderProfileComponent = ({
               className="font-bold text-sm md:text-lg text-midblue"
               speed={90}
               cursor={false}
-              sequence={["Software Engineer | Mobile (Flutter) & Cloud Specialist (GCP/Azure) | Python Backend"]}
+              sequence={[
+                "Software Engineer | Mobile (Flutter) & Cloud Specialist (GCP/Azure) | Python Backend",
+              ]}
             />
             <TypeAnimation
               wrapper="h2"
@@ -106,9 +108,27 @@ const HeaderProfileComponent = ({
               sequence={["Microsoft Azure Architect Certified"]}
             /> */}
             <section className="flex gap-x-4 pt-2">
-              <a href="https://github.com/edunickdev" target="_blank" className="text-sm md:text-lg hover:text-midblue transition-all duration-250 text-center z-10">Ver Github</a>
-              <a href="https://www.linkedin.com/in/eduard-nicolas-sarmiento-herrera" target="_blank" className="text-sm md:text-lg hover:text-midblue transition-all duration-250 text-center z-10">Ver LinkedIn</a>
-              <a href={cv_link && cv_link} target="_blank" className="text-sm md:text-lg hover:text-midblue transition-all duration-250 text-center z-10">Descargar CV</a>
+              <a
+                href="https://github.com/edunickdev"
+                target="_blank"
+                className="text-sm md:text-lg hover:text-midblue transition-all duration-250 text-center z-10"
+              >
+                Ver Github
+              </a>
+              <a
+                href="https://www.linkedin.com/in/eduard-nicolas-sarmiento-herrera"
+                target="_blank"
+                className="text-sm md:text-lg hover:text-midblue transition-all duration-250 text-center z-10"
+              >
+                Ver LinkedIn
+              </a>
+              <a
+                href={cv_link && cv_link}
+                target="_blank"
+                className="text-sm md:text-lg hover:text-midblue transition-all duration-250 text-center z-10"
+              >
+                Descargar CV
+              </a>
             </section>
           </motion.div>
         </section>
@@ -117,7 +137,8 @@ const HeaderProfileComponent = ({
             initial={{ x: -50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="mt-8 font-semibold text-xl md:text-2xl">
+            className="mt-8 font-semibold text-xl md:text-2xl"
+          >
             Apasionado por la tecnología y la innovación
           </motion.h2>
           <motion.span
@@ -126,8 +147,14 @@ const HeaderProfileComponent = ({
             transition={{ delay: 1.2 }}
             className="mt-5 md:pr-10 text-small md:text-lg"
           >
-            Ingeniero de Software con más de 3 años de experiencia en el ciclo completo de desarrollo (SDLC). Especialista en la construcción de arquitecturas móviles escalables con Flutter y backends robustos en Python (FastAPI). Experto en implementación de flujos CI/CD y despliegues en nube (Azure/GCP).
-            Combino una sólida capacidad técnica en integración de IA Generativa (OpenAI/RAG) con una trayectoria previa en el sector financiero, aportando una visión estratégica sobre seguridad de datos y eficiencia operativa.
+            Ingeniero de Software con más de 3 años de experiencia en el ciclo
+            completo de desarrollo (SDLC). Especialista en la construcción de
+            arquitecturas móviles escalables con Flutter y backends robustos en
+            Python (FastAPI). Experto en implementación de flujos CI/CD y
+            despliegues en nube (Azure/GCP). Combino una sólida capacidad
+            técnica en integración de IA Generativa (OpenAI/RAG) con una
+            trayectoria previa en el sector financiero, aportando una visión
+            estratégica sobre seguridad de datos y eficiencia operativa.
           </motion.span>
         </section>
       </div>
