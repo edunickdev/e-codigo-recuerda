@@ -21,7 +21,7 @@ const MyRoutes = () => {
     const element = refMap[section]?.current;
 
     if (element) {
-      const navbarHeight = 100; // Ajusta según la altura de tu navbar
+      const navbarHeight = 100;
       const elementPosition = element.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition - navbarHeight;
 
