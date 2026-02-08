@@ -1,134 +1,148 @@
 import { Button } from "@nextui-org/react";
-import { useProjects } from "../../stores/stores";
+import { useProjects, useTheme } from "../../stores/stores";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { FiSun, FiMoon, FiMenu, FiX } from "react-icons/fi";
+import { MotionDiv, MotionNav, AnimatePresence } from "../../config/motion";
 
-const MenuBarComponent = ({ onScroll }: { onScroll: (section: string) => void }) => {
+const MenuBarComponent = ({
+  onScroll,
+}: {
+  onScroll: (section: string) => void;
+}) => {
   const path = useLocation();
-
   const [isOpen, setIsOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const fetchProjects = useProjects((state) => state.fetchProjects);
+  const { isDark, toggleTheme, initTheme } = useTheme();
+
+  const toggleMenu = () => setIsOpen(!isOpen);
 
   useEffect(() => {
     fetchProjects();
-  }, [fetchProjects]);
+    initTheme();
+  }, [fetchProjects, initTheme]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navItems = [
+    { key: "about", label: "Sobre mí" },
+    { key: "studies", label: "Estudios" },
+    { key: "projects", label: "Proyectos" },
+    { key: "technologies", label: "Tecnologías" },
+  ];
+
+  if (path.pathname !== "/") return null;
 
   return (
     <>
-      {path.pathname === "/" ? (
-        <nav className="flex justify-between items-center h-[10vh] md:grid md:grid-cols-12 bg-darkblue z-20 fixed w-full shadow-lg opacity-95">
-          {/* Espaciado para diseño */}
-          <div className="md:col-span-1"></div>
-
-          {/* Título */}
-          <span className="md:col-span-4 lg:col-span-3 text-lightblue md:text-2xl lg:text-3xl font-medium">
-            EL CÓDIGO RECUERDA
+      {/* Floating Glassmorphism Navbar */}
+      <MotionNav
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-full transition-all duration-300
+          ${
+            isScrolled
+              ? "bg-white/80 dark:bg-bg-dark/80 shadow-lg"
+              : "bg-white/60 dark:bg-bg-dark/60"
+          }
+          backdrop-blur-xl border border-black/5 dark:border-white/10
+        `}
+      >
+        <div className="flex items-center gap-6">
+          {/* Logo */}
+          <span className="font-bold text-lg text-accent dark:text-accent-dark whitespace-nowrap">
+            ECR
           </span>
 
-          {/* Botón de menú (solo visible en móviles) */}
-          <div className="relative md:hidden">
-            <Button
-              className="block text-lightblue border-none bg-transparent"
-              variant="bordered"
-              onPress={toggleMenu}
-              aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
-            >
-              ☰
-            </Button>
-
-            {/* Menú de navegación para móviles */}
-            <section
-              className={`absolute top-12 left-0 bg-darkblue text-lightblue w-[6.5rem] rounded-md shadow-lg transition-all duration-300 ease-in-out overflow-hidden ${
-                isOpen
-                  ? "opacity-100 scale-100"
-                  : "opacity-0 scale-95 pointer-events-none"
-              }`}
-              style={{ transformOrigin: "top center" }}
-            >
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-1">
+            {navItems.map((item) => (
               <Button
-                variant="bordered"
-                onPress={() => {
-                  onScroll("about");
-                  toggleMenu();
-                }}
-                className="block px-4 py-2 hover:bg-midblue transition-all duration-250 cursor-pointer bg-transparent border-none w-24 text-lightblue"
+                key={item.key}
+                variant="light"
+                onPress={() => onScroll(item.key)}
+                className="text-text-primary dark:text-text-primary-dark hover:text-accent dark:hover:text-accent-dark 
+                  transition-colors duration-200 font-medium text-sm px-4"
               >
-                Sobre mí
+                {item.label}
               </Button>
-              <Button
-                variant="bordered"
-                onPress={() => {
-                  onScroll("studies");
-                  toggleMenu();
-                }}
-                className="block px-4 py-2 hover:bg-midblue transition-all duration-250 cursor-pointer bg-transparent border-none w-24 text-lightblue"
-              >
-                Estudios
-              </Button>
-              <Button
-                variant="bordered"
-                onPress={() => {
-                  onScroll("projects");
-                  toggleMenu();
-                }}
-                className="block px-4 py-2 hover:bg-midblue transition-all duration-250 cursor-pointer bg-transparent border-none w-24 text-lightblue"
-              >
-                Proyectos
-              </Button>
-              <Button
-                variant="bordered"
-                onPress={() => {
-                  onScroll("technologies");
-                  toggleMenu();
-                }}
-                className="block px-4 py-2 hover:bg-midblue transition-all duration-250 cursor-pointer bg-transparent border-none w-24 text-lightblue"
-              >
-                Tecnologías
-              </Button>
-            </section>
+            ))}
           </div>
 
-          {/* Menú de navegación para pantallas grandes */}
-          <section className="hidden md:flex md:col-span-6 lg:col-span-7 gap-x-2 justify-self-end">
-            <Button
-              variant="bordered"
-              onPress={() => onScroll("about")}
-              className="text-lightblue text-lg lg:text-xl hover:text-midblue transition-all duration-250 cursor-pointer z-10 bg-transparent border-none"
-            >
-              Sobre mí
-            </Button>
-            <Button
-              variant="bordered"
-              onPress={() => onScroll("studies")}
-              className="text-lightblue text-lg lg:text-xl hover:text-midblue transition-all duration-250 cursor-pointer z-10 bg-transparent border-none"
-            >
-              Estudios
-            </Button>
-            <Button
-              variant="bordered"
-              onPress={() => onScroll("projects")}
-              className="text-lightblue text-lg lg:text-xl hover:text-midblue transition-all duration-250 cursor-pointer z-10 bg-transparent border-none"
-            >
-              Proyectos
-            </Button>
-            <Button
-              variant="bordered"
-              onPress={() => onScroll("technologies")}
-              className="text-lightblue text-lg lg:text-xl hover:text-midblue transition-all duration-250 cursor-pointer z-10 bg-transparent border-none"
-            >
-              Tecnologías
-            </Button>
-          </section>
+          {/* Theme Toggle */}
+          <Button
+            isIconOnly
+            variant="light"
+            onPress={toggleTheme}
+            className="text-text-primary dark:text-text-primary-dark hover:text-accent dark:hover:text-accent-dark 
+              transition-all duration-200 min-w-unit-8 w-8 h-8"
+            aria-label={
+              isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"
+            }
+          >
+            {isDark ? <FiSun size={18} /> : <FiMoon size={18} />}
+          </Button>
 
-          {/* Espaciado para diseño */}
-          <div className="md:col-span-1"></div>
-        </nav>
-      ) : null}
+          {/* Mobile Menu Button */}
+          <Button
+            isIconOnly
+            variant="light"
+            onPress={toggleMenu}
+            className="md:hidden text-text-primary dark:text-text-primary-dark min-w-unit-8 w-8 h-8"
+            aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
+          >
+            {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
+          </Button>
+        </div>
+      </MotionNav>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <MotionDiv
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+            className="fixed top-20 left-4 right-4 z-40 md:hidden
+              bg-white/90 dark:bg-bg-dark/90 backdrop-blur-xl 
+              rounded-2xl shadow-xl border border-black/5 dark:border-white/10
+              p-4"
+          >
+            <div className="flex flex-col gap-2">
+              {navItems.map((item, index) => (
+                <MotionDiv
+                  key={item.key}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <Button
+                    variant="light"
+                    onPress={() => {
+                      onScroll(item.key);
+                      toggleMenu();
+                    }}
+                    className="w-full justify-start text-text-primary dark:text-text-primary-dark 
+                      hover:text-accent dark:hover:text-accent-dark font-medium text-base py-3"
+                  >
+                    {item.label}
+                  </Button>
+                </MotionDiv>
+              ))}
+            </div>
+          </MotionDiv>
+        )}
+      </AnimatePresence>
     </>
   );
 };

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useProjects } from "../../stores/stores";
-import { motion } from "framer-motion";
+import { MotionDiv, fadeInUp, staggerContainer } from "../../config/motion";
 import ImageComponents from "../components/projects/imagesComponent";
 import { useInView } from "react-intersection-observer";
-import { Button } from "@nextui-org/react";
+import { FiChevronDown, FiFolder } from "react-icons/fi";
 
 const MyProjectsScreen = ({
   refs,
@@ -11,116 +11,139 @@ const MyProjectsScreen = ({
   refs: Record<string, React.RefObject<HTMLDivElement>>;
 }) => {
   const projects = useProjects((state) => state.projects);
+  const selectedProject = useProjects((state) => state.selectedProject);
   const setProject = useProjects((state) => state.selectProject);
   const fetchProjects = useProjects((state) => state.fetchProjects);
 
   const [isOpened, setIsOpened] = useState(false);
 
   const { ref, inView } = useInView({
-    threshold: 0.2,
+    threshold: 0.1,
     triggerOnce: true,
   });
 
-  const toggleMenu = () => {
-    setIsOpened(!isOpened);
-  };
+  const toggleMenu = () => setIsOpened(!isOpened);
 
   useEffect(() => {
     fetchProjects();
-  }, [projects]);
+  }, []);
 
   return (
-    <section
-      className="flex flex-col md:grid md:grid-cols-12 h-auto min-h-[85vh] py-10 bg-darkblue gap-x-20"
-      ref={ref}
-    >
-      <h2
-        className="col-span-12 text-center text-2xl md:text-4xl text-lightblue my-5"
-        ref={refs.projects}
-      >
-        Proyectos
-      </h2>
-      {inView && (
-        <>
-          {/* Botón de menú para dispositivos móviles */}
-          <div className="relative md:hidden col-span-12 flex justify-center mt-4">
-            <Button
-              onPress={toggleMenu}
-              className="text-lightblue text-xl font-semibold bg-transparent border border-lightblue px-4 py-2 rounded-md"
-              aria-label={isOpened ? "Cerrar proyectos" : "Mostrar proyectos"}
-            >
-              ☰
-            </Button>
-
-            {/* Menú de proyectos para móviles */}
-            {isOpened && (
-              <section
-                className={`absolute top-12 left-0 right-0 bg-darkblue text-lightblue rounded-md shadow-lg transition-all duration-300 ease-in-out overflow-hidden mx-4 z-20`}
-                style={{ transformOrigin: "top center" }}
-              >
-                {projects.map((project, index) => (
-                  <Button
-                    key={project.id_project}
-                    onPress={() => {
-                      setProject(index);
-                      setIsOpened(false);
-                    }}
-                    className="block w-full text-left px-4 py-2 hover:bg-midblue transition-all duration-250 cursor-pointer bg-transparent border-none text-lightblue"
-                  >
-                    {project.name}
-                  </Button>
-                ))}
-              </section>
-            )}
-          </div>
-
-          {/* Lista de proyectos para pantallas medianas y grandes */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="hidden md:block col-span-4"
+    <section ref={ref} className="section-padding bg-bg-light dark:bg-bg-dark">
+      <div className="container mx-auto px-6 lg:px-12">
+        {/* Section Header */}
+        <MotionDiv
+          variants={fadeInUp}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          className="text-center mb-12"
+        >
+          <h2
+            ref={refs.projects}
+            className="text-3xl md:text-4xl font-bold text-text-primary dark:text-text-primary-dark mb-4"
           >
-            <div className="flex flex-col gap-y-3 overflow-x-visible h-[55vh] pt-5">
-              {projects.map((project, index) => (
-                <motion.div
-                  key={project.id_project}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{
-                    duration: index * 0.1,
-                    delay: 0.3 + index * 0.1,
-                  }}
-                  className="bg-lightblue h-12 py-2 pl-28 pr-3 hover:pl-[8rem] hover:pr-9 w-[20rem] lg:w-[22rem] hover:w-[23rem] lg:hover:w-[24rem] transition-all duration-200 hover:bg-midblue hover:text-lightblue flex items-center text-darkblue text-xl font-semibold rounded-tr-md rounded-br-md cursor-pointer"
-                  onClick={() => setProject(index)}
-                >
-                  {project.name}
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+            Proyectos <span className="gradient-text">Destacados</span>
+          </h2>
+          <p className="text-text-secondary dark:text-text-secondary-dark max-w-2xl mx-auto">
+            Soluciones end-to-end que muestran mi capacidad de llevar ideas a
+            productos funcionales
+          </p>
+        </MotionDiv>
 
-          {/* Componente de imágenes */}
-          <div className="col-span-12 md:col-span-8 flex items-start justify-center md:justify-start mr-0 md:mr-10 lg:mr-14 mt-6 md:mt-0 p-5">
-            <motion.div
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: "100%", opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              style={{ transformOrigin: "left" }}
-              className="flex flex-col justify-start items-center w-full h-[60vh] bg-lightblue rounded-md md:rounded-l-md overflow-hidden p-4"
+        {inView && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* Project Selector - Mobile Dropdown */}
+            <div className="lg:hidden relative">
+              <button
+                onClick={toggleMenu}
+                className="w-full glass-card p-4 flex items-center justify-between text-text-primary dark:text-text-primary-dark"
+              >
+                <span className="flex items-center gap-3">
+                  <FiFolder
+                    size={20}
+                    className="text-accent dark:text-accent-dark"
+                  />
+                  <span className="font-medium">
+                    {selectedProject?.name || "Seleccionar proyecto"}
+                  </span>
+                </span>
+                <FiChevronDown
+                  size={20}
+                  className={`transition-transform duration-300 ${isOpened ? "rotate-180" : ""}`}
+                />
+              </button>
+
+              {/* Mobile Dropdown Menu */}
+              {isOpened && (
+                <MotionDiv
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute top-full left-0 right-0 z-30 mt-2 glass-card overflow-hidden"
+                >
+                  {projects.map((project, index) => (
+                    <button
+                      key={project.id_project}
+                      onClick={() => {
+                        setProject(index);
+                        setIsOpened(false);
+                      }}
+                      className={`w-full text-left px-4 py-3 transition-colors
+                        ${
+                          selectedProject?.id_project === project.id_project
+                            ? "bg-accent/10 dark:bg-accent-dark/10 text-accent dark:text-accent-dark"
+                            : "text-text-primary dark:text-text-primary-dark hover:bg-black/5 dark:hover:bg-white/5"
+                        }`}
+                    >
+                      {project.name}
+                    </button>
+                  ))}
+                </MotionDiv>
+              )}
+            </div>
+
+            {/* Project Selector - Desktop Sidebar */}
+            <MotionDiv
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              className="hidden lg:block lg:col-span-4"
             >
-              <ImageComponents />
-            </motion.div>
-            {/* Elemento decorativo para escritorio */}
-            <motion.div
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: "20px", opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="hidden md:block w-5 h-[62vh] -mt-[0.4rem] -ml-1 bg-midblue rounded-tl-md rounded-bl-md"
-            ></motion.div>
+              <div className="space-y-2">
+                {projects.map((project, index) => (
+                  <MotionDiv key={project.id_project} variants={fadeInUp}>
+                    <button
+                      onClick={() => setProject(index)}
+                      className={`w-full text-left px-6 py-4 rounded-xl font-medium transition-all duration-300
+                        ${
+                          selectedProject?.id_project === project.id_project
+                            ? "bg-accent dark:bg-accent-dark text-white shadow-lg glow"
+                            : "glass-card text-text-primary dark:text-text-primary-dark hover:translate-x-2"
+                        }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <FiFolder size={18} />
+                        {project.name}
+                      </div>
+                    </button>
+                  </MotionDiv>
+                ))}
+              </div>
+            </MotionDiv>
+
+            {/* Project Content */}
+            <MotionDiv
+              variants={fadeInUp}
+              initial="hidden"
+              animate="visible"
+              className="lg:col-span-8"
+            >
+              <div className="glass-card p-4 md:p-6 rounded-2xl min-h-[500px]">
+                <ImageComponents />
+              </div>
+            </MotionDiv>
           </div>
-        </>
-      )}
+        )}
+      </div>
     </section>
   );
 };

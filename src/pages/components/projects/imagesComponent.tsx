@@ -1,168 +1,260 @@
-import { Button, Image, Tab, Tabs, Tooltip } from "@nextui-org/react";
+import { Button, Image, Tooltip } from "@nextui-org/react";
 import { statics } from "../../../config/images";
 import { useState, useEffect } from "react";
 import { useProjects } from "../../../stores/stores";
-import { motion, AnimatePresence } from "framer-motion";
+import { MotionImg, MotionDiv, AnimatePresence } from "../../../config/motion";
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiExternalLink,
+  FiChevronUp,
+  FiChevronDown,
+} from "react-icons/fi";
 
 const ImageComponents = () => {
   const [currentImage, setCurrentImage] = useState(0);
-  const [showInfo, setShowInfo] = useState(false);
-  const [hasAnimated, setHasAnimated] = useState(false);
-  const project = useProjects((state) => state.projects[state.selected_project]);
+  const [showDetails, setShowDetails] = useState(false);
+  const [activeTab, setActiveTab] = useState<"desc" | "strength" | "learned">(
+    "desc",
+  );
+  const project = useProjects(
+    (state) => state.projects[state.selected_project],
+  );
 
   const images = project && [project.main_image, ...project.other_images];
 
   const goToNextImage = () => {
-    if (currentImage === images.length - 1) {
-      setCurrentImage(0);
-    } else {
-      setCurrentImage(currentImage + 1);
+    if (images) {
+      setCurrentImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
     }
   };
 
   const goToPreviousImage = () => {
-    if (currentImage === 0) {
-      setCurrentImage(images.length - 1);
-    } else {
-      setCurrentImage(currentImage - 1);
+    if (images) {
+      setCurrentImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
     }
   };
 
   useEffect(() => {
-    if (!hasAnimated) {
-      setTimeout(() => {
-        setShowInfo(true);
-      }, 1200);
-        
-      const timer = setTimeout(() => {
-        setShowInfo(false);
-        setHasAnimated(true);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [hasAnimated, project]);
+    setCurrentImage(0);
+    setShowDetails(false);
+    setActiveTab("desc");
+  }, [project]);
+
+  if (!project) {
+    return (
+      <div className="flex items-center justify-center h-full text-text-secondary dark:text-text-secondary-dark">
+        Selecciona un proyecto para ver los detalles
+      </div>
+    );
+  }
+
+  const tabs = [
+    { key: "desc", label: "Descripción", content: project.description },
+    { key: "strength", label: "Fortalezas", content: project.strength },
+    { key: "learned", label: "Aprendizajes", content: project.learned },
+  ].filter((tab) => tab.content);
 
   return (
-    <div className="flex flex-col md:flex-row h-full w-full justify-between items-center gap-x-2">
-      <div className="flex md:flex-col justify-start items-center h-full p-1 md:p-2 gap-x-5 md:gap-x-0">
-        <section className="flex justify-center items-center gap-x-1">
-          <Button
-            isIconOnly
-            radius="full"
-            className="bg-darkblue text-lightblue cursor-pointer animate-appearance-in transition-all duration-300 shadow-md shadow-midblue"
-            onClick={goToPreviousImage}
+    <div className="flex flex-col h-full w-full gap-4">
+      {/* Project Header */}
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="flex items-center gap-3">
+          <h3 className="text-xl font-bold text-text-primary dark:text-text-primary-dark">
+            {project.name}
+          </h3>
+          {images && images.length > 1 && (
+            <span className="text-xs text-text-secondary dark:text-text-secondary-dark bg-bg-secondary dark:bg-bg-elevated px-2 py-1 rounded-full">
+              {currentImage + 1} / {images.length}
+            </span>
+          )}
+        </div>
+        {project.deploy && project.deploy.includes("https") && (
+          <a
+            href={project.deploy}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary flex items-center gap-2 text-sm py-2 px-4"
           >
-            <Image src={statics.flechaAtras} className="w-9 p-2" />
-          </Button>
-          <Button
-            isIconOnly
-            radius="full"
-            className="bg-darkblue text-lightblue cursor-pointer animate-appearance-in transition-all duration-300 shadow-md shadow-midblue"
-            onClick={goToNextImage}
-          >
-            <Image src={statics.flechaSiguiente} className="w-9 p-2" />
-          </Button>
-        </section>
-        <section className="flex md:flex-col justify-start items-center mt-0 md:pt-3 gap-y-2">
-          {project?.technologies.map((technology, index) => {
-            const route = `${statics[technology]}`;
-            return (
-              <Tooltip
-                key={index}
-                content={technology}
-                placement="left"
-                className="bg-midblue text-darkblue font-semibold"
-              >
-                <motion.img
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  src={route}
-                  className="text-sm w-8 md:w-9"
-                />
-              </Tooltip>
-            );
-          })}
-        </section>
+            <FiExternalLink size={16} />
+            Visitar
+          </a>
+        )}
       </div>
 
-      <div
-        className="relative w-full"
-        onMouseEnter={() => setShowInfo(true)}
-        onMouseLeave={() => setShowInfo(false)}
-      >
-        <Image
-          src={images && images[currentImage]}
-          alt=""
-          className="object-cover h-[49vh] md:h-[58vh] w-full border-2 border-midblue"
-        />
-        <AnimatePresence>
-          {showInfo && (
-            <motion.div
-              className="absolute inset-0 flex flex-col bg-midblue/80 justify-center items-center text-lightblue z-10 rounded-xl p-7"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <motion.h3
-                className="text-lg md:text-xl font-bold p-2 bg-darkblue rounded-xl"
-                initial={{ y: -50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                {project?.title}
-              </motion.h3>
-              <motion.div
-                className="text-xs md:text-sm mt-1 text-left py-2 px-4 bg-lightblue rounded-xl h-full w-full m-1"
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Tabs
-                  aria-label="Options"
-                  className="text-darkblue w-52 md:w-auto"
-                  variant="underlined"
-                >
-                  <Tab key="descripcion" title="Descripción">
-                    <div className="bg-lightblue text-darkblue">
-                        <span className="text-xs md:text-sm">{project?.description}</span>
-                    </div>
-                  </Tab>
-                  <Tab key="fortalezas" title="Fortalezas">
-                    <div className="bg-lightblue">
-                        <span className="text-xs md:text-sm text-darkblue">{project?.strength}</span>
-                    </div>
-                  </Tab>
-                  <Tab key="conocimientos" title="Nuevos Conocimientos">
-                    <div className="bg-lightblue text-darkblue">
-                        <span className="text-xs md:text-sm">{project?.learned}</span>
-                    </div>
-                  </Tab>
-                </Tabs>
-              </motion.div>
-              {project.deploy ? (
-                <motion.div
-                  className="text-xs md:text-sm p-2 flex justify-around gap-10 rounded-xl bottom-0 left-0"
-                  initial={{ y: 50, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                  about="_blank"
-                >
-                  {project.deploy.includes("https") ? (<a
-                    href={project.deploy && project.deploy}
-                    target="_blank"
-                    className="bg-darkblue py-1 px-2 rounded-lg"
-                  >
-                    Visitar
-                  </a>) : ""}
-                  <span className="bg-darkblue py-1 px-2 rounded-lg">
-                    <strong>Novedades:</strong> {project.status}
-                  </span>
-                </motion.div>
-              ) : null}
-            </motion.div>
-          )}
+      {/* Main Image Gallery */}
+      <div className="relative flex-1 rounded-xl overflow-hidden bg-bg-secondary dark:bg-bg-elevated min-h-[300px]">
+        {/* Current Image */}
+        <AnimatePresence mode="wait">
+          <MotionDiv
+            key={currentImage}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={images && images[currentImage]}
+              alt={`${project.name} - Imagen ${currentImage + 1}`}
+              className="object-contain w-full h-full"
+              removeWrapper
+            />
+          </MotionDiv>
         </AnimatePresence>
+
+        {/* Navigation Arrows */}
+        {images && images.length > 1 && (
+          <>
+            <div className="absolute inset-y-0 left-0 flex items-center z-10">
+              <Button
+                isIconOnly
+                radius="full"
+                size="sm"
+                onPress={goToPreviousImage}
+                className="ml-2 bg-white/90 dark:bg-bg-dark/90 text-text-primary dark:text-text-primary-dark shadow-lg hover:scale-105 transition-transform"
+              >
+                <FiChevronLeft size={20} />
+              </Button>
+            </div>
+            <div className="absolute inset-y-0 right-0 flex items-center z-10">
+              <Button
+                isIconOnly
+                radius="full"
+                size="sm"
+                onPress={goToNextImage}
+                className="mr-2 bg-white/90 dark:bg-bg-dark/90 text-text-primary dark:text-text-primary-dark shadow-lg hover:scale-105 transition-transform"
+              >
+                <FiChevronRight size={20} />
+              </Button>
+            </div>
+          </>
+        )}
+
+        {/* Image Indicators */}
+        {images && images.length > 1 && (
+          <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex gap-2 z-10 bg-black/20 dark:bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentImage(index)}
+                className={`rounded-full transition-all duration-300
+                  ${
+                    index === currentImage
+                      ? "bg-accent dark:bg-accent-dark w-6 h-2"
+                      : "bg-white/60 dark:bg-white/40 w-2 h-2 hover:bg-white/80"
+                  }`}
+                aria-label={`Ir a imagen ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Slide-up Details Panel */}
+        <div className="absolute bottom-0 left-0 right-0 z-20">
+          {/* Toggle Button */}
+          <button
+            onClick={() => setShowDetails(!showDetails)}
+            className="w-full flex items-center justify-center gap-2 py-2 
+              bg-gradient-to-t from-white dark:from-bg-dark to-white/80 dark:to-bg-dark/80
+              backdrop-blur-sm text-text-primary dark:text-text-primary-dark
+              hover:from-bg-secondary dark:hover:from-bg-elevated transition-colors"
+          >
+            <span className="text-sm font-medium">
+              {showDetails ? "Ocultar detalles" : "Ver detalles del proyecto"}
+            </span>
+            {showDetails ? (
+              <FiChevronDown size={16} />
+            ) : (
+              <FiChevronUp size={16} />
+            )}
+          </button>
+
+          {/* Expandable Details Panel */}
+          <AnimatePresence>
+            {showDetails && (
+              <MotionDiv
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="overflow-hidden bg-white dark:bg-bg-dark border-t border-border-color"
+              >
+                <div className="p-4">
+                  {/* Tab Buttons */}
+                  <div className="flex gap-2 mb-3 overflow-x-auto pb-1">
+                    {tabs.map((tab) => (
+                      <button
+                        key={tab.key}
+                        onClick={() =>
+                          setActiveTab(tab.key as typeof activeTab)
+                        }
+                        className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all
+                          ${
+                            activeTab === tab.key
+                              ? "bg-accent dark:bg-accent-dark text-white"
+                              : "bg-bg-secondary dark:bg-bg-elevated text-text-secondary dark:text-text-secondary-dark hover:bg-accent/10 dark:hover:bg-accent-dark/10"
+                          }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Tab Content */}
+                  <AnimatePresence mode="wait">
+                    <MotionDiv
+                      key={activeTab}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="text-sm text-text-secondary dark:text-text-secondary-dark leading-relaxed max-h-32 overflow-y-auto"
+                    >
+                      {tabs.find((t) => t.key === activeTab)?.content}
+                    </MotionDiv>
+                  </AnimatePresence>
+
+                  {/* Status Badge */}
+                  {project.status && (
+                    <div className="mt-3 px-3 py-2 bg-accent/10 dark:bg-accent-dark/10 rounded-lg inline-block">
+                      <span className="text-xs text-accent dark:text-accent-dark font-medium">
+                        📌 {project.status}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </MotionDiv>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Tech Stack */}
+      <div className="flex flex-wrap gap-2">
+        {project?.technologies.map((technology, index) => {
+          const route = statics[technology as keyof typeof statics];
+          return (
+            <Tooltip
+              key={index}
+              content={technology}
+              classNames={{
+                content:
+                  "bg-bg-card dark:bg-bg-dark text-text-primary dark:text-text-primary-dark font-medium",
+              }}
+            >
+              <MotionImg
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.05 }}
+                src={route}
+                className="w-8 h-8 object-contain p-1 rounded-lg bg-bg-secondary dark:bg-bg-elevated 
+                  hover:scale-110 transition-transform cursor-pointer"
+                alt={technology}
+              />
+            </Tooltip>
+          );
+        })}
       </div>
     </div>
   );

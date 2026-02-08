@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { MotionDiv, staggerContainer, fadeInUp } from "../../config/motion";
 import { useInView } from "react-intersection-observer";
 import { sections } from "../../config/helpers/constants";
 import { Tooltip } from "@nextui-org/react";
@@ -8,59 +8,97 @@ const KnowledgesScreen = ({
 }: {
   refs: Record<string, React.RefObject<HTMLDivElement>>;
 }) => {
-
   const { ref, inView } = useInView({
-    threshold: 0.2,
+    threshold: 0.1,
     triggerOnce: true,
   });
 
-
   return (
     <section
-      className="flex flex-col justify-start items-start md:grid md:grid-cols-12 h-auto min-h-[85vh] p-8"
       ref={ref}
+      className="section-padding bg-bg-secondary dark:bg-bg-elevated"
     >
-      <h2
-        className="col-span-12 text-2xl md:text-4xl text-center text-darkblue font-bold pt-12 pb-6"
-        ref={refs.technologies}
-      >
-        Principales tecnologías que domino
-      </h2>
-      <div className="col-span-1"></div>
-      {inView && (
-        <motion.section
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="col-span-10 flex flex-wrap justify-around px-3 py-14 gap-2 md:gap-5"
+      <div className="container mx-auto px-6 lg:px-12">
+        {/* Section Header */}
+        <MotionDiv
+          variants={fadeInUp}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          className="text-center mb-12"
         >
-          {sections.map((section, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: index * 0.3 }}
-              className="rounded-xl py-2 px-3 w-auto flex flex-col items-center justify-center gap-2 md:gap-5"
-            >
-              <h2 className="md:text-2xl text-darkblue font-semibold text-center w-full">
-                {section.title}
-              </h2>
-              <div className="flex">
-                {section.technologies.map((technology, index) => (
-                <Tooltip key={index} content={technology.text} placement="bottom" className="p-2 bg-lightblue text-darkblue font-semibold">
-                    <img
-                      key={index}
-                      className="w-[40px] md:w-[68px]"
-                      src={technology.path}
-                      alt=""
-                    />
-                  </Tooltip>))}
-              </div>
-            </motion.div>
-          ))}
-        </motion.section>
-      )}
-      <div className="col-span-1"></div>
+          <h2
+            ref={refs.technologies}
+            className="text-3xl md:text-4xl font-bold text-text-primary dark:text-text-primary-dark mb-4"
+          >
+            Stack <span className="gradient-text">Tecnológico</span>
+          </h2>
+          <p className="text-text-secondary dark:text-text-secondary-dark max-w-2xl mx-auto">
+            Herramientas que utilizo para construir soluciones robustas y
+            escalables
+          </p>
+        </MotionDiv>
+
+        {/* Skills Grid */}
+        {inView && (
+          <MotionDiv
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          >
+            {sections.map((section, sectionIndex) => (
+              <MotionDiv
+                key={sectionIndex}
+                variants={fadeInUp}
+                className="glass-card p-6"
+              >
+                {/* Category Title */}
+                <h3 className="text-lg font-bold text-text-primary dark:text-text-primary-dark mb-4 pb-2 border-b border-border-color">
+                  {section.title}
+                </h3>
+
+                {/* Technologies */}
+                <div className="flex flex-wrap gap-3">
+                  {section.technologies.map((technology, techIndex) => (
+                    <Tooltip
+                      key={techIndex}
+                      content={technology.text}
+                      classNames={{
+                        content:
+                          "bg-bg-card dark:bg-bg-dark text-text-primary dark:text-text-primary-dark font-medium",
+                      }}
+                    >
+                      <MotionDiv
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{
+                          delay: sectionIndex * 0.1 + techIndex * 0.05,
+                        }}
+                        className="group relative"
+                      >
+                        <div
+                          className="w-14 h-14 flex items-center justify-center p-2 rounded-xl 
+                          bg-bg-light dark:bg-bg-dark border border-border-color
+                          transition-all duration-300 cursor-pointer
+                          hover:border-accent dark:hover:border-accent-dark
+                          hover:shadow-lg dark:hover:shadow-glow
+                          group-hover:scale-110"
+                        >
+                          <img
+                            src={technology.path}
+                            alt={technology.text}
+                            className="w-8 h-8 object-contain"
+                          />
+                        </div>
+                      </MotionDiv>
+                    </Tooltip>
+                  ))}
+                </div>
+              </MotionDiv>
+            ))}
+          </MotionDiv>
+        )}
+      </div>
     </section>
   );
 };
