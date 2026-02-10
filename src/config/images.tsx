@@ -4,7 +4,7 @@ import reacticon from "../assets/images/React.svg";
 import fluttericon from "../assets/images/fluttericon.svg";
 import djangoicon from "../assets/images/Django.svg";
 import fastapiicon from "../assets/images/FastAPI.svg";
-import fotoPerfil from "../assets/images/fotoPerfil.jpg";
+import fotoPerfil from "../assets/images/fotoPerfil.jpeg";
 import az104 from "../assets/images/AZ104.svg";
 import dp203 from "../assets/images/DP203.svg";
 import az305 from "../assets/images/AZ305.svg";
